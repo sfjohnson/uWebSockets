@@ -1,9 +1,9 @@
-name: C++ CI
+name: Build
 
-on: [push]
+on: push
 
 jobs:
-  build_osx:
+  build:
     runs-on: macos-10.15
     steps:
       - name: Checkout
@@ -11,5 +11,5 @@ jobs:
         with:
           persist-credentials: false
 
-    - name: Build source
-      run: make
+      - name: Build
+        run: make
