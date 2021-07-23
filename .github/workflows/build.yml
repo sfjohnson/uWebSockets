@@ -13,4 +13,7 @@ jobs:
           submodules: recursive
 
       - name: Build
-        run: make
+        run: WITH_OPENSSL=1 make
+
+      - name: List output
+        run: ls .
