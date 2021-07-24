@@ -18,11 +18,11 @@ struct uws_ws_s;
 typedef struct uws_app_s uws_app_t;
 typedef struct uws_ws_s uws_ws_t;
 
-uws_app_t *uws_create_app();
-void uws_app_ws(uws_app_t *app, const char *pattern, void (*openHandler)(uws_ws_t *), void (*messageHandler)(uws_ws_t *, const char *, size_t, unsigned char), void (*closeHandler)(uws_ws_t *, int));
-void uws_ws_send(uws_ws_t *ws, const char *message, size_t length, unsigned char opCode);
-void uws_app_run(uws_app_t *app);
-void uws_app_listen(uws_app_t *app, int port, void (*handler)(void *));
+uws_app_t *uws_createApp();
+void uws_appWs (uws_app_t *app, const char *pattern, void (*openHandler)(uws_ws_t *), void (*messageHandler)(uws_ws_t *, const char *, size_t, unsigned char), void (*closeHandler)(uws_ws_t *, int));
+int uws_wsSend (uws_ws_t *ws, const char *message, size_t length, unsigned char opCode);
+void uws_appRun (uws_app_t *app);
+void uws_appListen (uws_app_t *app, int port, void (*handler)(void *));
 
 #ifdef __cplusplus
 }

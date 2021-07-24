@@ -25,6 +25,9 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
-          files: libuwebsockets.a
+          files: |
+            capi/libuwebsockets.h
+            libuwebsockets.a
+            LICENSE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
