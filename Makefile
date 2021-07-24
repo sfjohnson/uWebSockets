@@ -1,7 +1,7 @@
 EXAMPLE_FILES := Broadcast HelloWorld ServerName EchoServer BroadcastingEchoServer UpgradeSync UpgradeAsync
 THREADED_EXAMPLE_FILES := HelloWorldThreaded EchoServerThreaded
-override CXXFLAGS += -lpthread -Wpedantic -Wall -Wextra -Wsign-conversion -Wconversion -std=c++2a -Isrc -IuSockets/src -I/usr/local/opt/openssl/include
-override LDFLAGS += -lz -L/usr/local/opt/openssl/lib
+override CXXFLAGS += -lpthread -Wpedantic -Wall -Wextra -Wsign-conversion -Wconversion -std=c++2a -Isrc -IuSockets/src
+override LDFLAGS += -lz
 
 DESTDIR ?=
 prefix ?= /usr/local
