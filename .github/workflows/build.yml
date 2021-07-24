@@ -1,6 +1,9 @@
-name: Build
+name: Build Release
 
-on: push
+on:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -19,5 +22,9 @@ jobs:
           export LIBRARY_PATH="$LIBRARY_PATH:/usr/local/opt/openssl/lib"
           make
 
-      - name: List output
-        run: ls .
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: libuwebsockets.a
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
