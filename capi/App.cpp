@@ -1,13 +1,12 @@
 #include "libuwebsockets.h"
 #include "App.h"
 
-#define MAX_PAYLOAD_LENGTH 16 * 1024
+#define UWS_MAX_PAYLOAD_LENGTH 16 * 1024
+#define UWS_USE_SSL false
 
 extern "C" {
 
 struct PerSocketData {
-  // int messageLength;
-  // char *messageData;
   int nothing;
 };
 
@@ -15,11 +14,11 @@ uws_app_t *uws_create_app() {
   return (uws_app_t *) new uWS::App();
 }
 
-void uws_app_ws(uws_app_t *app, const char *pattern, void (*openHandler)(uws_ws_t *), void (*messageHandler)(uws_ws_t *, const char *, size_t, int), void (*closeHandler)(uws_ws_t *, int)) {
+void uws_app_ws(uws_app_t *app, const char *pattern, void (*openHandler)(uws_ws_t *), void (*messageHandler)(uws_ws_t *, const char *, size_t, unsigned char), void (*closeHandler)(uws_ws_t *, int)) {
   uWS::App *uwsApp = (uWS::App *)app;
 
   uwsApp->ws<PerSocketData>(pattern, {
-    .maxPayloadLength = MAX_PAYLOAD_LENGTH,
+    .maxPayloadLength = UWS_MAX_PAYLOAD_LENGTH,
     .idleTimeout = 16,
     .maxBackpressure = 64 * 1024,
     .closeOnBackpressureLimit = false,
@@ -29,16 +28,20 @@ void uws_app_ws(uws_app_t *app, const char *pattern, void (*openHandler)(uws_ws_
     .upgrade = nullptr,
     .open = [openHandler](auto *ws) {
       openHandler((uws_ws_t *)ws);
-      // ws->getUserData()->messageData = (char *)malloc(MAX_PAYLOAD_LENGTH);
     },
     .message = [messageHandler](auto *ws, std::string_view message, uWS::OpCode opCode) {
       messageHandler((uws_ws_t *)ws, message.data(), message.length(), opCode);
     },
     .close = [closeHandler](auto *ws, int code, std::string_view) {
       closeHandler((uws_ws_t *)ws, code);
-      // free(ws->getUserData()->messageData);
     }
   });
+}
+
+void uws_ws_send(uws_ws_t *ws, const char *message, size_t length, unsigned char opCode) {
+  uWS::WebSocket<UWS_USE_SSL, true, PerSocketData> *uwsWs = (uWS::WebSocket<UWS_USE_SSL, true, PerSocketData> *)ws;
+  std::string_view view(message, length);
+  uwsWs->send(view, static_cast<uWS::OpCode>(opCode), false); // no compression
 }
 
 void uws_app_run(uws_app_t *app) {
