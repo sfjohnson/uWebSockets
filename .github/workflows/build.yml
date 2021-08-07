@@ -22,14 +22,14 @@ jobs:
           export LIBRARY_PATH="$LIBRARY_PATH:/usr/local/opt/openssl/lib"
           make -f macos10.mk
 
-      - name: Cache build output
-        uses: actions/cache@v2
+      - name: Upload build output
+        uses: actions/upload-artifact@v2
         with:
+          name: build-output-macos10
           path: |
             capi/libuwebsockets.h
             libuwebsockets-macos10.a
             LICENSE
-          key: build-output-macos10
 
   build-android:
     runs-on: ubuntu-20.04
@@ -45,28 +45,22 @@ jobs:
         run: |
           make -f android30.mk
 
-      - name: Cache build output
-        uses: actions/cache@v2
+      - name: Upload build output
+        uses: actions/upload-artifact@v2
         with:
-          path: |
-            libuwebsockets-android30.a
-          key: build-output-android30
+          name: build-output-android30
+          path: libuwebsockets-android30.a
 
   create-release:
     runs-on: ubuntu-20.04
     needs: [build-macos, build-android]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Get build outputs
+        uses: actions/download-artifact@v2
         with:
-          persist-credentials: false
-          submodules: recursive
-
-      - name: Get build outputs from cache
-        uses: actions/cache@v2
-        with:
-          path: .
-          key: build-output-
+          name: |
+            build-output-macos10
+            build-output-android30
 
       - name: Create release
         uses: softprops/action-gh-release@v1
