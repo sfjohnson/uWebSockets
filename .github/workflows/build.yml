@@ -29,7 +29,7 @@ jobs:
             capi/libuwebsockets.h
             libuwebsockets-macos10.a
             LICENSE
-          key: macos10-build
+          key: build-output-macos10
 
   build-android:
     runs-on: ubuntu-20.04
@@ -50,19 +50,23 @@ jobs:
         with:
           path: |
             libuwebsockets-android30.a
-          key: android30-build
+          key: build-output-android30
 
   create-release:
     runs-on: ubuntu-20.04
     needs: [build-macos, build-android]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          submodules: recursive
+
       - name: Get build outputs from cache
         uses: actions/cache@v2
         with:
           path: .
-          key: |
-            macos10-build
-            android30-build
+          key: build-output-
 
       - name: Create release
         uses: softprops/action-gh-release@v1
