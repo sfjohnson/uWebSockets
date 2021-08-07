@@ -59,6 +59,7 @@ jobs:
       - name: Get build outputs from cache
         uses: actions/cache@v2
         with:
+          path: .
           key: |
             macos10-build
             android30-build
