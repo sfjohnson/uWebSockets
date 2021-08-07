@@ -1,12 +1,9 @@
 name: Build Release
 
-on:
-  push:
-    tags:
-      - 'v*'
+on: push
 
 jobs:
-  build:
+  build-macos:
     runs-on: macos-10.15
     steps:
       - name: Checkout
@@ -20,14 +17,20 @@ jobs:
           export WITH_OPENSSL=1
           export CPATH="$CPATH:/usr/local/opt/openssl/include"
           export LIBRARY_PATH="$LIBRARY_PATH:/usr/local/opt/openssl/lib"
-          make
+          make -f macos10.mk
+          ls
 
-      - name: Create release
-        uses: softprops/action-gh-release@v1
+  build-android:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
-          files: |
-            capi/libuwebsockets.h
-            libuwebsockets.a
-            LICENSE
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
+          submodules: recursive
+
+      # Build without OpenSSL
+      - name: Build
+        run: |
+          make -f android30.mk
+          ls
