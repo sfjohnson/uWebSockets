@@ -61,12 +61,15 @@ jobs:
           persist-credentials: false
           submodules: recursive
 
-      - name: Get build outputs
+      - name: Get build output macos10
         uses: actions/download-artifact@v2
         with:
-          name: |
-            build-output-macos10
-            build-output-android30
+          name: build-output-macos10
+
+      - name: Get build output android30
+        uses: actions/download-artifact@v2
+        with:
+          name: build-output-android30
 
       - name: Create release
         uses: softprops/action-gh-release@v1
