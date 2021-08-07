@@ -1,6 +1,8 @@
-# Android
-AR = $(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android-ar
-CXX = $(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android30-clang
+HOST_OS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
+HOST_ARCH := $(shell uname -m)
+
+AR = $(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/$(HOST_OS)-$(HOST_ARCH)/bin/aarch64-linux-android-ar
+CXX = $(ANDROID_NDK_HOME)/toolchains/llvm/prebuilt/$(HOST_OS)-$(HOST_ARCH)/bin/aarch64-linux-android30-clang
 override CXXFLAGS += -ffunction-sections \
 -fdata-sections \
 -DANDROID \
