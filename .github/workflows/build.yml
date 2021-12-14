@@ -22,12 +22,18 @@ jobs:
           export LIBRARY_PATH="$LIBRARY_PATH:/usr/local/opt/openssl/lib"
           make -f macos10.mk
 
+      - name: Prepare output
+        run: |
+          pushd capi
+          zip -r ../include.zip *.h
+          popd
+
       - name: Upload build output
         uses: actions/upload-artifact@v2
         with:
           name: build-output-macos10
           path: |
-            capi/libuwebsockets.h
+            include.zip
             libuwebsockets-macos10.a
             LICENSE
 
@@ -69,7 +75,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            capi/libuwebsockets.h
+            include.zip
             libuwebsockets-macos10.a
             libuwebsockets-android30.a
             LICENSE
