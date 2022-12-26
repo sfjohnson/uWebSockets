@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-10.15
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           persist-credentials: false
           submodules: recursive
@@ -20,10 +20,11 @@ jobs:
           export WITH_OPENSSL=1
           export CPATH="$CPATH:/usr/local/opt/openssl/include"
           export LIBRARY_PATH="$LIBRARY_PATH:/usr/local/opt/openssl/lib"
-          make -f macos10.mk
+          make -f macos.mk
 
       - name: Prepare output
         run: |
+          mv libuwebsockets.a libuwebsockets-macos10.a
           pushd capi
           zip -r ../include.zip *.h
           popd
@@ -37,11 +38,37 @@ jobs:
             libuwebsockets-macos10.a
             LICENSE
 
+  build-macos-arm64:
+    runs-on: [self-hosted, macOS, ARM64]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - name: Build
+        run: |
+          export WITH_OPENSSL=1
+          export CPATH="$CPATH:/opt/homebrew/opt/openssl@3/include"
+          export LIBRARY_PATH="$LIBRARY_PATH:/opt/homebrew/opt/openssl@3/lib"
+          make -f macos.mk
+
+      - name: Prepare output
+        run: mv libuwebsockets.a libuwebsockets-macos-arm64.a
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-output-macos-arm64
+          path: |
+            libuwebsockets-macos-arm64.a
+
   build-android:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           persist-credentials: false
           submodules: recursive
@@ -59,7 +86,7 @@ jobs:
 
   create-release:
     runs-on: ubuntu-20.04
-    needs: [build-macos, build-android]
+    needs: [build-macos, build-android, build-macos-arm64]
     steps:
       - name: Get build output macos10
         uses: actions/download-artifact@v2
@@ -71,12 +98,18 @@ jobs:
         with:
           name: build-output-android30
 
+      - name: Get build output macos-arm64
+        uses: actions/download-artifact@v2
+        with:
+          name: build-output-macos-arm64
+
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             include.zip
             libuwebsockets-macos10.a
+            libuwebsockets-macos-arm64.a
             libuwebsockets-android30.a
             LICENSE
         env:

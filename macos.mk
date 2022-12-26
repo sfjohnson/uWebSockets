@@ -15,7 +15,7 @@ endif
 capi:
 	$(MAKE) -C uSockets
 	$(CXX) -flto -O3 $(CXXFLAGS) -c capi/App.cpp -o capi.o $(LDFLAGS)
-	$(AR) rvs libuwebsockets-macos10.a capi.o uSockets/*.o
+	$(AR) rvs libuwebsockets.a capi.o uSockets/*.o
 
 all:
 	$(MAKE) capi
