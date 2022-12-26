@@ -75,8 +75,7 @@ jobs:
 
       # Build without OpenSSL
       - name: Build
-        run: |
-          make -f android30.mk
+        run: make -f android30.mk
 
       - name: Upload build output
         uses: actions/upload-artifact@v2
