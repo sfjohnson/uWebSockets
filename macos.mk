@@ -1,4 +1,10 @@
-override CXXFLAGS += -Wpedantic -Wall -Wextra -Wsign-conversion -Wconversion -std=c++2b -Isrc -IuSockets/src
+override CXXFLAGS += -Wpedantic -Wall -Wextra -Wsign-conversion -Wconversion -std=c++20 -Isrc -IuSockets/src
+
+ifeq ($(WITH_HOMEBREW_LLVM),1)
+	override CXXFLAGS += -I/opt/homebrew/opt/llvm/include
+	override CXX = /opt/homebrew/opt/llvm/bin/clang
+	override AR = /opt/homebrew/opt/llvm/bin/llvm-ar
+endif
 
 # WITH_LIBUV=1 builds with libuv as event-loop
 ifeq ($(WITH_LIBUV),1)

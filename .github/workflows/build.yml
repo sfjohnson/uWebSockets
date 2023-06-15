@@ -49,6 +49,7 @@ jobs:
 
       - name: Build
         run: |
+          export WITH_HOMEBREW_LLVM=1
           export WITH_OPENSSL=1
           export CPATH="$CPATH:/opt/homebrew/opt/openssl@3/include"
           export LIBRARY_PATH="$LIBRARY_PATH:/opt/homebrew/opt/openssl@3/lib"
