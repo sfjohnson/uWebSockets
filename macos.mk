@@ -14,7 +14,7 @@ endif
 .PHONY: capi
 capi:
 	$(MAKE) -C uSockets
-	$(CXX) -flto -O2 $(CXXFLAGS) -c capi/App.cpp -o capi.o $(LDFLAGS)
+	$(CXX) -O3 $(CXXFLAGS) -c capi/App.cpp -o capi.o $(LDFLAGS)
 	$(AR) rvs libuwebsockets.a capi.o uSockets/*.o
 
 all:
