@@ -1,4 +1,4 @@
-override CXXFLAGS += -Wpedantic -Wall -Wextra -Wsign-conversion -Wconversion -std=c++2a -Isrc -IuSockets/src
+override CXXFLAGS += -Wpedantic -Wall -Wextra -Wsign-conversion -Wconversion -std=c++20 -Isrc -IuSockets/src
 
 # WITH_LIBUV=1 builds with libuv as event-loop
 ifeq ($(WITH_LIBUV),1)
