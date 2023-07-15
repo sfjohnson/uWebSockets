@@ -65,8 +65,8 @@ jobs:
           path: |
             libuwebsockets-macos-arm64.a
 
-  build-android:
-    runs-on: ubuntu-20.04
+  build-android-and-rpi:
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -76,27 +76,32 @@ jobs:
 
       # Build without OpenSSL
       - name: Build
-        run: make -f android30.mk
+        run: |
+          make -f android30.mk
+          make clean
+          make -f rpi.mk
 
       - name: Upload build output
         uses: actions/upload-artifact@v2
         with:
-          name: build-output-android30
-          path: libuwebsockets-android30.a
+          name: build-output-android30-and-rpi
+          path: |
+            libuwebsockets-android30.a
+            libuwebsockets-rpi.a
 
   create-release:
-    runs-on: ubuntu-20.04
-    needs: [build-macos, build-android, build-macos-arm64]
+    runs-on: ubuntu-22.04
+    needs: [build-macos, build-android-and-rpi, build-macos-arm64]
     steps:
       - name: Get build output macos11
         uses: actions/download-artifact@v2
         with:
           name: build-output-macos11
 
-      - name: Get build output android30
+      - name:  Get build output android30 and rpi
         uses: actions/download-artifact@v2
         with:
-          name: build-output-android30
+          name: build-output-android30-and-rpi
 
       - name: Get build output macos-arm64
         uses: actions/download-artifact@v2
@@ -111,6 +116,7 @@ jobs:
             libuwebsockets-macos11.a
             libuwebsockets-macos-arm64.a
             libuwebsockets-android30.a
+            libuwebsockets-rpi.a
             LICENSE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
