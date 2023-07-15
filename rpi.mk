@@ -2,6 +2,7 @@ AR = $(HOME)/arm-rpi-linux-gnueabihf/bin/arm-rpi-linux-gnueabihf-ar
 CXX = $(HOME)/arm-rpi-linux-gnueabihf/bin/arm-rpi-linux-gnueabihf-g++
 override CXXFLAGS += -ffunction-sections \
 -fdata-sections \
+-DUWS_NO_ZLIB \
 -D__arm__ \
 --sysroot="$(HOME)/arm-rpi-linux-gnueabihf/arm-rpi-linux-gnueabihf/sysroot" \
 -B"$(HOME)/arm-rpi-linux-gnueabihf/bin/arm-rpi-linux-gnueabihf-" \

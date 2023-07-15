@@ -79,10 +79,9 @@ jobs:
           wget https://github.com/sfjohnson/rpi-toolchain/releases/download/v0.0.6/arm-rpi-linux-gnueabihf.tar.xz
           tar xf arm-rpi-linux-gnueabihf.tar.xz -C ~
 
-      # Build without OpenSSL and zlib
+      # Build both without OpenSSL and RPi without zlib
       - name: Build
         run: |
-          export UWS_NO_ZLIB=1
           make -f android30.mk
           make -f android30.mk clean
           make -f rpi.mk
