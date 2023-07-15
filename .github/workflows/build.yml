@@ -78,7 +78,7 @@ jobs:
       - name: Build
         run: |
           make -f android30.mk
-          make clean
+          make -f android30.mk clean
           make -f rpi.mk
 
       - name: Upload build output
