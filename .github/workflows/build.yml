@@ -74,6 +74,11 @@ jobs:
           persist-credentials: false
           submodules: recursive
 
+      - name: Get RPi toolchain
+        run: |
+          wget https://github.com/sfjohnson/rpi-toolchain/releases/download/v0.0.6/arm-rpi-linux-gnueabihf.tar.xz
+          tar xf arm-rpi-linux-gnueabihf.tar.xz -C ~
+
       # Build without OpenSSL
       - name: Build
         run: |
