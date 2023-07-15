@@ -39,5 +39,5 @@ all:
 	$(MAKE) capi
 
 clean:
-	$(MAKE) -C uSockets -f android30.mk clean
+	$(MAKE) -C uSockets -f android.mk clean
 	rm -f *.o
