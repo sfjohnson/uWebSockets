@@ -65,7 +65,7 @@ jobs:
           path: |
             libuwebsockets-macos-arm64.a
 
-  build-android-and-rpi:
+  build-linux:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -79,34 +79,39 @@ jobs:
           wget https://github.com/sfjohnson/rpi-toolchain/releases/download/v0.0.6/arm-rpi-linux-gnueabihf.tar.xz
           tar xf arm-rpi-linux-gnueabihf.tar.xz -C ~
 
-      # Build both without OpenSSL and RPi without zlib
+      # rpi: no zlib, no OpenSSL
+      # android30: zlib, no OpenSSL
+      # linux-x64: zlib and OpenSSL
       - name: Build
         run: |
           make -f android30.mk
           make -f android30.mk clean
           make -f rpi.mk
+          make -f rpi.mk clean
+          WITH_OPENSSL=1 make -f linux-x64.mk
 
       - name: Upload build output
         uses: actions/upload-artifact@v2
         with:
-          name: build-output-android30-and-rpi
+          name: build-output-linux
           path: |
             libuwebsockets-android30.a
             libuwebsockets-rpi.a
+            libuwebsockets-linux-x64.a
 
   create-release:
     runs-on: ubuntu-22.04
-    needs: [build-macos, build-android-and-rpi, build-macos-arm64]
+    needs: [build-macos, build-macos-arm64, build-linux]
     steps:
       - name: Get build output macos11
         uses: actions/download-artifact@v2
         with:
           name: build-output-macos11
 
-      - name:  Get build output android30 and rpi
+      - name:  Get build output linux
         uses: actions/download-artifact@v2
         with:
-          name: build-output-android30-and-rpi
+          name: build-output-linux
 
       - name: Get build output macos-arm64
         uses: actions/download-artifact@v2
@@ -122,6 +127,7 @@ jobs:
             libuwebsockets-macos-arm64.a
             libuwebsockets-android30.a
             libuwebsockets-rpi.a
+            libuwebsockets-linux-x64.a
             LICENSE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
