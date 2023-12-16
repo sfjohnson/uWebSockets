@@ -24,9 +24,13 @@ endif
 
 .PHONY: capi
 capi:
-	$(MAKE) -C uSockets
+	$(MAKE) -C uSockets -f linux-x64.mk
 	$(CXX) -O3 $(CXXFLAGS) -c capi/App.cpp -o capi.o $(LDFLAGS)
 	$(AR) rvs libuwebsockets-linux-x64.a capi.o uSockets/*.o
 
 all:
 	$(MAKE) capi
+
+clean:
+	$(MAKE) -C uSockets -f linux-x64.mk clean
+	rm -f *.o
