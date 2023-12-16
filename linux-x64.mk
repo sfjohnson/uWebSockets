@@ -1,6 +1,6 @@
 AR = ar
-CC = gcc
-CXX = g++
+CC = gcc-13
+CXX = g++-13
 
 override CXXFLAGS += -Wpedantic \
 -Wall \
