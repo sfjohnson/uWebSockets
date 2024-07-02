@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-macos:
-    runs-on: macos-11
+    runs-on: macos-12
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -49,7 +49,6 @@ jobs:
 
       - name: Build
         run: |
-          export WITH_HOMEBREW_LLVM=1
           export WITH_OPENSSL=1
           export CPATH="$CPATH:/opt/homebrew/opt/openssl@3/include"
           export LIBRARY_PATH="$LIBRARY_PATH:/opt/homebrew/opt/openssl@3/lib"
@@ -66,7 +65,7 @@ jobs:
             libuwebsockets-macos-arm64.a
 
   build-linux:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -112,7 +111,7 @@ jobs:
         run: |
           sudo mkdir -p /usr/local/share/keyring/
           sudo wget -O /usr/local/share/keyring/devkitpro-pub.gpg https://apt.devkitpro.org/devkitpro-pub.gpg
-          sudo echo "deb [signed-by=/usr/local/share/keyring/devkitpro-pub.gpg] https://apt.devkitpro.org stable main" >> /etc/apt/sources.list.d/devkitpro.list
+          sudo echo "deb [signed-by=/usr/local/share/keyring/devkitpro-pub.gpg] https://apt.devkitpro.org stable main" >> /etc/apt/sources.list
           sudo apt-get update
           sudo apt-get install devkitpro-pacman
           sudo dkp-pacman -S switch-dev
@@ -121,7 +120,7 @@ jobs:
           echo $DEVKITPRO
 
   create-release:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [build-macos, build-macos-arm64, build-linux, build-nx]
     steps:
       - name: Get build output macos11
