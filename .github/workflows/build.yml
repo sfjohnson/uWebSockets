@@ -76,7 +76,7 @@ jobs:
 
       - name: Get RPi toolchain
         run: |
-          wget https://github.com/sfjohnson/rpi-toolchain/releases/download/v0.0.6/arm-rpi-linux-gnueabihf.tar.xz
+          wget https://github.com/sfjohnson/rpi-toolchain/releases/download/v0.0.8/arm-rpi-linux-gnueabihf.tar.xz
           tar xf arm-rpi-linux-gnueabihf.tar.xz -C ~
 
       # rpi: no zlib, no OpenSSL
@@ -112,7 +112,7 @@ jobs:
         run: |
           sudo mkdir -p /usr/local/share/keyring/
           sudo wget -O /usr/local/share/keyring/devkitpro-pub.gpg https://apt.devkitpro.org/devkitpro-pub.gpg
-          sudo add-apt-repository "deb [signed-by=/usr/local/share/keyring/devkitpro-pub.gpg] https://apt.devkitpro.org stable main"
+          sudo echo "deb [signed-by=/usr/local/share/keyring/devkitpro-pub.gpg] https://apt.devkitpro.org stable main" >> /etc/apt/sources.list.d/devkitpro.list
           sudo apt-get update
           sudo apt-get install devkitpro-pacman
           sudo dkp-pacman -S switch-dev
