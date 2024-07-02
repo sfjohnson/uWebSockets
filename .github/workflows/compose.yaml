@@ -1,0 +1,6 @@
+services:
+  nx-builder:
+    build: .
+    working_dir: /home
+    volumes:
+      - ../../:/home
