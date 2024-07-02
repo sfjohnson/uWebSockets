@@ -4,4 +4,4 @@ services:
     working_dir: /home
     volumes:
       - ../../:/home
-    command: WITH_OPENSSL=1 make -f nx.mk
+    command: sh -c "WITH_OPENSSL=1 make -f nx.mk"
