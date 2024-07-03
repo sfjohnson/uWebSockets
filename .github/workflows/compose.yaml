@@ -1,7 +1,0 @@
-services:
-  nx-builder:
-    build: .
-    working_dir: /home
-    volumes:
-      - ../../:/home
-    command: sh -c "WITH_OPENSSL=1 make -f nx.mk"

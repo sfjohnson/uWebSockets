@@ -98,28 +98,9 @@ jobs:
             libuwebsockets-rpi.a
             libuwebsockets-linux-x64.a
 
-  build-nx:
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          submodules: recursive
-
-      - name: Build
-        run: docker compose -f ${{ github.workspace }}/.github/workflows/compose.yaml up
-
-      - name: Upload build output
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output-nx
-          path: |
-            libuwebsockets-nx.a
-
   create-release:
     runs-on: ubuntu-24.04
-    needs: [build-macos, build-macos-arm64, build-linux, build-nx]
+    needs: [build-macos, build-macos-arm64, build-linux]
     steps:
       - name: Get build output macos11
         uses: actions/download-artifact@v4
@@ -136,11 +117,6 @@ jobs:
         with:
           name: build-output-macos-arm64
 
-      - name:  Get build output nx
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output-nx
-
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
@@ -151,7 +127,6 @@ jobs:
             libuwebsockets-android30.a
             libuwebsockets-rpi.a
             libuwebsockets-linux-x64.a
-            libuwebsockets-nx.a
             LICENSE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
