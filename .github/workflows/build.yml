@@ -24,7 +24,7 @@ jobs:
 
       - name: Prepare output
         run: |
-          mv libuwebsockets.a libuwebsockets-macos11.a
+          mv libuwebsockets.a libuwebsockets-macos12.a
           pushd capi
           zip -r ../include.zip *.h
           popd
@@ -32,14 +32,14 @@ jobs:
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
-          name: build-output-macos11
+          name: build-output-macos12
           path: |
             include.zip
-            libuwebsockets-macos11.a
+            libuwebsockets-macos12.a
             LICENSE
 
   build-macos-arm64:
-    runs-on: flyci-macos-large-latest-m2
+    runs-on: macos-14
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -65,7 +65,7 @@ jobs:
             libuwebsockets-macos-arm64.a
 
   build-linux:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -75,18 +75,16 @@ jobs:
 
       - name: Get RPi toolchain
         run: |
-          wget https://github.com/sfjohnson/rpi-toolchain/releases/download/v0.0.8/arm-rpi-linux-gnueabihf.tar.xz
-          tar xf arm-rpi-linux-gnueabihf.tar.xz -C ~
+          wget https://github.com/sfjohnson/rpi-toolchain/releases/download/v0.1.6/aarch64-rpi4-linux-gnu.tar.xz
+          tar xf aarch64-rpi4-linux-gnu.tar.xz -C ~
 
       # rpi: no zlib, no OpenSSL
       # android30: zlib, no OpenSSL
       # linux-x64: zlib and OpenSSL
       - name: Build
         run: |
-          make -f android30.mk
-          make -f android30.mk clean
-          make -f rpi.mk
-          make -f rpi.mk clean
+          make -f rpi-arm64.mk
+          make -f rpi-arm64.mk clean
           WITH_OPENSSL=1 make -f linux-x64.mk
 
       - name: Upload build output
@@ -94,18 +92,17 @@ jobs:
         with:
           name: build-output-linux
           path: |
-            libuwebsockets-android30.a
-            libuwebsockets-rpi.a
+            libuwebsockets-rpi-arm64.a
             libuwebsockets-linux-x64.a
 
   create-release:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     needs: [build-macos, build-macos-arm64, build-linux]
     steps:
-      - name: Get build output macos11
+      - name: Get build output macos12
         uses: actions/download-artifact@v4
         with:
-          name: build-output-macos11
+          name: build-output-macos12
 
       - name:  Get build output linux
         uses: actions/download-artifact@v4
@@ -122,10 +119,9 @@ jobs:
         with:
           files: |
             include.zip
-            libuwebsockets-macos11.a
+            libuwebsockets-macos12.a
             libuwebsockets-macos-arm64.a
-            libuwebsockets-android30.a
-            libuwebsockets-rpi.a
+            libuwebsockets-rpi-arm64.a
             libuwebsockets-linux-x64.a
             LICENSE
         env:
