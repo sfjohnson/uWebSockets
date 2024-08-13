@@ -1,10 +1,8 @@
-override CXXFLAGS += -Wpedantic -Wall -Wextra -Wsign-conversion -Wconversion -std=c++20 -Isrc -IuSockets/src
+override CXXFLAGS += -I/opt/homebrew/opt/llvm/include -fPIC -Wpedantic -Wall -Wextra -Wsign-conversion -Wconversion -std=c++20 -Isrc -IuSockets/src
 
-ifeq ($(WITH_HOMEBREW_LLVM),1)
-	override CXXFLAGS += -I/opt/homebrew/opt/llvm/include
-	override CXX = /opt/homebrew/opt/llvm/bin/clang
-	override AR = /opt/homebrew/opt/llvm/bin/llvm-ar
-endif
+LLVM_PATH := $(shell brew --prefix llvm@15)
+override CXX = $(LLVM_PATH)/bin/clang
+override AR = $(LLVM_PATH)/bin/llvm-ar
 
 # WITH_LIBUV=1 builds with libuv as event-loop
 ifeq ($(WITH_LIBUV),1)
@@ -19,7 +17,7 @@ endif
 
 .PHONY: capi
 capi:
-	$(MAKE) -C uSockets
+	$(MAKE) -C uSockets -f macos.mk
 	$(CXX) -flto -O3 $(CXXFLAGS) -c capi/App.cpp -o capi.o $(LDFLAGS)
 	$(AR) rvs libuwebsockets.a capi.o uSockets/*.o
 
